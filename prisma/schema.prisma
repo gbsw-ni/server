@@ -13,13 +13,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model goal {
-  id          Int         @id @default(autoincrement()) @unique
-  title       String
-  contents    String
-  type        Boolean
-  img         String
-  rating      Int
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime
+model PublicGoal {
+  id                 Int               @id @default(autoincrement()) @unique
+  title              String
+  contents           String
+  type               Boolean
+  img                String
+  rating             Int
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime
+  complete           PublicComplete[]
+}
+
+model PrivateGoal {
+  id                 Int               @id @default(autoincrement()) @unique
+  userId             Int
+  title              String
+  contents           String
+  type               Boolean
+  img                String
+  rating             Int
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime
+  complete           PrivateComplete[]
+}
+
+model PublicComplete {
+  id                 Int               @id @default(autoincrement()) @unique
+  userId             Int
+  goal               PublicGoal        @relation(fields: [goalId], references: [id])
+  goalId             Int               // relation scalar field  (used in the `@relation` attribute above)
+  completedAt        DateTime          @default(now())
+}
+
+model PrivateComplete {
+  id                 Int               @id @default(autoincrement()) @unique
+  userId             Int
+  goal               PrivateGoal       @relation(fields: [goalId], references: [id])
+  goalId             Int               // relation scalar field  (used in the `@relation` attribute above)
+  completedAt        DateTime          @default(now())
 }
