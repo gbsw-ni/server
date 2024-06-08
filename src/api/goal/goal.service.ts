@@ -63,18 +63,30 @@ const update = async (id: number, userId: number, goal: UpdateGoalDto) => {
 const deleteById = async (id: number, userId: number) => {
   const exist = !userId ? await pb.findUnique({ where: { id }})
     : await pv.findUnique({ where: { id, userId: userId } })
-  // id에 해당하는 목표가 없으면 404 반환.
-  if (!exist) return { status: 404, message: '404 not found' }
-
-  const deleteQry = !userId ? await pb.delete({ where: { id } })
+    // id에 해당하는 목표가 없으면 404 반환.
+    if (!exist) return { status: 404, message: '404 not found' }
+    
+    const deleteQry = !userId ? await pb.delete({ where: { id } })
     : await pv.delete({ where: { id, userId: userId } })
+    
+    return { status: 204, message: deleteQry }
+  }
+  
+  const complete = async (id: number, userId: number) => {
+    // // complete table에 post.
+    // const exist = !userId ? await pb.findUnique({ where: { id }})
+    // : await pv.findUnique({ where: { id, userId: userId } })
+    // // id에 해당하는 목표가 없으면 404 반환.
+    // if (!exist) return { status: 404, message: '404 not found' }
 
-  return { status: 204, message: deleteQry }
+    // const goal = await pb
+    
+    // const completeQry = !userId ? await prisma.publicComplete.create({
+    //   data: { userId: userId, goal: : pb.findUnique({ where: { id } }) }
+    // })
+
+    //미완. 수정중. complete table에 완료된 목표를 추가하는 방식.
 }
-
-// const complete = async (id: number) => {
-  // complete table에 post.
-// }
 
 // const incomplete = async (id: number) => {
   // complete table에서 삭제.

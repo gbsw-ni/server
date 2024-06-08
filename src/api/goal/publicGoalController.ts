@@ -41,4 +41,12 @@ const deleteById = async (req: Request, res: Response) => {
   res.status(204).send();
 }
 
+const complete = async (req: Request, res: Response) => {
+  const _user = +req.params.userId
+  const _id = +req.params.id
+  const service = await goalService.complete(_id, _user)
+  
+  res.status(201).json(service);
+}
+
 module.exports = { createGoal, readAll, readById, updateGoal, deleteById }
