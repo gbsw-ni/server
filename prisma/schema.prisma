@@ -13,6 +13,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id                 Int               @id @default(autoincrement()) @unique
+  friendCode         String            @unique
+  email              String            @unique
+  name               String
+  password           String
+  rating             Int
+  ratingLimit        Int
+  friends1           Friend[]          @relation("User1Friends")  // 첫 번째 친구 관계
+  friends2           Friend[]          @relation("User2Friends")  // 두 번째 친구 관계
+}
+
 model PublicGoal {
   id                 Int               @id @default(autoincrement()) @unique
   title              String
@@ -42,7 +54,7 @@ model PublicComplete {
   id                 Int               @id @default(autoincrement()) @unique
   userId             Int
   goal               PublicGoal        @relation(fields: [goalId], references: [id])
-  goalId             Int               // relation scalar field  (used in the `@relation` attribute above)
+  goalId             Int               // 관계 스칼라 필드
   completedAt        DateTime          @default(now())
 }
 
@@ -50,7 +62,7 @@ model PrivateComplete {
   id                 Int               @id @default(autoincrement()) @unique
   userId             Int
   goal               PrivateGoal       @relation(fields: [goalId], references: [id])
-  goalId             Int               // relation scalar field  (used in the `@relation` attribute above)
+  goalId             Int               // 관계 스칼라 필드
   completedAt        DateTime          @default(now())
 }
 
@@ -58,6 +70,19 @@ model Diary {
   id                 Int               @id @default(autoincrement()) @unique
   userId             Int
   contents           String
+  mission            Int
+  rating             Int
   createdAt          DateTime          @default(now())
   updatedAt          DateTime
+}
+
+model Friend {
+  id         Int    @id @default(autoincrement())
+  user1      User   @relation("User1Friends", fields: [userId1], references: [id])
+  userId1    Int
+  user2      User   @relation("User2Friends", fields: [userId2], references: [id])
+  userId2    Int
+  isAccepted Boolean
+
+  @@unique([userId1, userId2])
 }
