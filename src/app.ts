@@ -5,9 +5,9 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.get('/welcome', (req: Request, res: Response, next: NextFunction) => {
-    res.send('welcome!')
-})
+// app.get('/welcome', (req: Request, res: Response, next: NextFunction) => {
+//     res.send('welcome!')
+// })
 
 const api = require('./routes/init')
 app.use('/api', api)

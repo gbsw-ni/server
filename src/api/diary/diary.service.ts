@@ -21,8 +21,8 @@ const readByUser = async (userId: number) => {
   else return { status: 200, qry: diary }
 }
 
-const readById = async (id: number) => {
-  const diary = await prisma.diary.findUnique({ where: { id } })
+const readById = async (userId: number, id: number) => {
+  const diary = await prisma.diary.findUnique({ where: { id, userId } })
 
   if (!diary) {
     return { status: 404, message: '404 not found' }
@@ -31,8 +31,8 @@ const readById = async (id: number) => {
   }
 }
 
-const update = async (id: number, diary: UpdateDiaryDto) => {
-  const exist = await prisma.diary.findUnique({ where: { id } });
+const update = async (userId: number, id: number, diary: UpdateDiaryDto) => {
+  const exist = await prisma.diary.findUnique({ where: { id, userId } });
 
   if (!exist) return { status: 404, message: '404 not found' };
 
@@ -46,12 +46,14 @@ const update = async (id: number, diary: UpdateDiaryDto) => {
     return { status: 200, message: updateQry };
 }
 
-const deleteById = async (id: number) => {
-  const exist = await prisma.diary.findUnique({ where: { id } });
+const deleteById = async (userId: number, id: number) => {
+  const exist = await prisma.diary.findUnique({ where: { id, userId } });
 
   if (!exist) return { status: 404, message: '404 not found' }
 
-  const deleteQry = await prisma.diary.delete({ where: { id } })
+  const deleteQry = await prisma.diary.delete({ where: { id, userId } })
 
   return { status: 204, message: deleteQry }
 }
+
+export = { create, readByUser, readById, update, deleteById }

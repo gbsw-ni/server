@@ -58,3 +58,5 @@ const deleteFriend = async (myId: number, otherId: number) => {
 
   return { status: 204, message: deleteQry}
 }
+
+export = { applyFriend, appliedUserRead, acceptApply, searchUser, deleteFriend }
