@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 
-const friendService = require('./diary.service')
+const friendService = require('./friend.service')
 
 const applyFriend = async (req: Request, res: Response) => {
   const _user1 = +req.params.userId

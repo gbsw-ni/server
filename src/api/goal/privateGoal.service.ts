@@ -2,18 +2,13 @@
 // import { CreateGoalDto, UpdateGoalDto } from "../../models/goalModel"
 
 // const prisma = createDBconnection()
-// const pv = prisma.privateGoal
-// const pb = prisma.publicGoal
 
 // const create = async (userId: number, goal: CreateGoalDto) => {
 //   const { title, contents, type, img } = goal
 //   const rating = 1
 //   const createdAt = new Date()
   
-//   const createQry = !userId ? await pb.create({
-//     data: { title, contents, type, img, rating: rating, createdAt: createdAt, updatedAt:  createdAt }
-//   })
-//   : await pv.create({
+//   const createQry = await prisma.privateGoal.create({
 //     data: { userId, title, contents, type, img, rating: rating, createdAt: createdAt, updatedAt: createdAt }
 //   })
 
@@ -22,15 +17,13 @@
 
 // const readAll = async (userId: number) => {
 
-//   const goals = !userId ? await pb.findMany()
-//     : await pv.findMany({ where: { userId: userId }})
+//   const goals = await prisma.privateGoal.findMany({ where: { userId: userId }})
 
 //   return { status: 200, qry: goals }
 // }
 
 // const readById = async (id: number, userId: number) => {
-//   const goal = !userId ? await pb.findUnique({ where: { id } })
-//     : await pv.findUnique({ where: { id, userId: userId } })
+//   const goal = await prisma.privateGoal.findUnique({ where: { id, userId } })
 
 //   if (!goal) {
 //     return { status: 404, message: '404 not found' }
@@ -40,19 +33,14 @@
 // }
 
 // const update = async (id: number, userId: number, goal: UpdateGoalDto) => {
-//   const exist = !userId ? await pb.findUnique({ where: { id }})
-//     : await pv.findUnique({ where: { id, userId: userId } })
+//   const exist = await prisma.privateGoal.findUnique({ where: { id, userId } })
 //   // id에 해당하는 목표가 없으면 404 반환.
 //   if (!exist) return { status: 404, message: '404 not found' }
 
 //   const { title, contents, type, img } = goal
 //   const updatedAt = new Date()
   
-//   const updateQry = !userId ? await pb.update({
-//     where: { id },
-//     data: { title, contents, type, img, updatedAt }
-//   })
-//     : await pv.update({
+//   const updateQry = await prisma.privateGoal.update({
 //       where: { id, userId },
 //       data: { title, contents, type, img, updatedAt }
 //     })
@@ -61,13 +49,11 @@
 // }
 
 // const deleteById = async (id: number, userId: number) => {
-//   const exist = !userId ? await pb.findUnique({ where: { id }})
-//     : await pv.findUnique({ where: { id, userId: userId } })
+//   const exist = await prisma.privateGoal.findUnique({ where: { id, userId } })
 //     // id에 해당하는 목표가 없으면 404 반환.
 //     if (!exist) return { status: 404, message: '404 not found' }
     
-//     const deleteQry = !userId ? await pb.delete({ where: { id } })
-//     : await pv.delete({ where: { id, userId: userId } })
+//     const deleteQry = await prisma.privateGoal.delete({ where: { id, userId } })
     
 //     return { status: 204, message: deleteQry }
 //   }
@@ -75,7 +61,7 @@
 //   const complete = async (id: number, userId: number) => {
 //     // // complete table에 post.
 //     // const exist = !userId ? await pb.findUnique({ where: { id }})
-//     // : await pv.findUnique({ where: { id, userId: userId } })
+//     // : await prisma.privateGoal.findUnique({ where: { id, userId: userId } })
 //     // // id에 해당하는 목표가 없으면 404 반환.
 //     // if (!exist) return { status: 404, message: '404 not found' }
 

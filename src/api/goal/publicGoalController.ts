@@ -1,11 +1,9 @@
 // import { Request, Response } from "express"
-// // import { Goal } from "../../entities/goal.entity"
 
-// const goalService = require('./goal.service')
+// const goalService = require('./publicGoal.service')
 
 // const createGoal = async (req: Request, res: Response) => {
-//   const _user = +req.params.userId
-//   const service = await goalService.create(_user, req.body)
+//   const service = await goalService.create(req.body)
   
 //   res.status(201).json(service)
 // }

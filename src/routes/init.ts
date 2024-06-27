@@ -10,6 +10,9 @@ router.get('/', (_: Request, res: Response, next: NextFunction) => {
 // const goal = require('./goal/goal')
 // router.use('/goals', goal)
 
+const user = require('./user/user')
+router.use('/user', user)
+
 const diary = require('./diary/diary')
 router.use('/diary', diary)
 

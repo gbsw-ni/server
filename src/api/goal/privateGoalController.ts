@@ -1,9 +1,6 @@
-// publicGoalController와 내용 같음. 수정 중.
-
 // import { Request, Response } from "express"
-// // import { Goal } from "../../entities/goal.entity"
 
-// const goalService = require('./goal.service')
+// const goalService = require('./privateGoal.service')
 
 // const createGoal = async (req: Request, res: Response) => {
 //   const _user = +req.params.userId
