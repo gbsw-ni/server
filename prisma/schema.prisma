@@ -21,36 +21,6 @@ model User {
   privateGoals PrivateGoal[]
   privateCompletes PrivateComplete[]
   diaries     Diary[]
-  publicCompletes PublicComplete[]
-}
-
-model PrivateGoal {
-  id        Int         @id @default(autoincrement())
-  userId    Int         // User 모델의 id를 참조하는 외래키
-  title     String
-  contents  String
-  type      Boolean
-  img       String
-  rating    Int
-  createdAt DateTime    @default(now())
-  updatedAt DateTime
-  completes PrivateComplete[]
-
-  // User 모델과의 관계 설정
-  user      User        @relation(fields: [userId], references: [id])
-}
-
-model PrivateComplete {
-  id           Int        @id @default(autoincrement())
-  userId       Int        // User 모델의 id를 참조하는 외래키
-  goalId       Int        // PrivateGoal 모델의 id를 참조하는 외래키
-  completedAt  DateTime   @default(now())
-
-  // User 모델과의 관계 설정
-  user         User       @relation(fields: [userId], references: [id])
-
-  // PrivateGoal 모델과의 관계 설정
-  goal         PrivateGoal @relation(fields: [goalId], references: [id])
 }
 
 model Diary {
@@ -86,8 +56,9 @@ model Friend {
   @@unique([userId1, userId2])
 }
 
-model PublicGoal {
+model PrivateGoal {
   id        Int         @id @default(autoincrement())
+  userId    Int         // User 모델의 id를 참조하는 외래키
   title     String
   contents  String
   type      Boolean
@@ -95,18 +66,21 @@ model PublicGoal {
   rating    Int
   createdAt DateTime    @default(now())
   updatedAt DateTime
-  completes PublicComplete[]
+  completes PrivateComplete[]
+
+  // User 모델과의 관계 설정
+  user      User        @relation(fields: [userId], references: [id])
 }
 
-model PublicComplete {
+model PrivateComplete {
   id           Int        @id @default(autoincrement())
   userId       Int        // User 모델의 id를 참조하는 외래키
-  goalId       Int        // PublicGoal 모델의 id를 참조하는 외래키
+  goalId       Int        // PrivateGoal 모델의 id를 참조하는 외래키
   completedAt  DateTime   @default(now())
 
   // User 모델과의 관계 설정
   user         User       @relation(fields: [userId], references: [id])
 
-  // PublicGoal 모델과의 관계 설정
-  goal         PublicGoal @relation(fields: [goalId], references: [id])
+  // PrivateGoal 모델과의 관계 설정
+  goal         PrivateGoal @relation(fields: [goalId], references: [id])
 }

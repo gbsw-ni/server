@@ -1,5 +1,5 @@
 interface ApplyFriendDto {
-  userId2: number
+  applyUserId: number
 }
 
 interface SearchFriendDto {

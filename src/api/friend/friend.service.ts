@@ -4,44 +4,71 @@ import { ApplyFriendDto, SearchFriendDto } from "../../models/friendModel"
 const prisma = createDBconnection()
 
 const applyFriend = async (userId1: number, friend: ApplyFriendDto) => {
-  const { userId2 } = friend
+  const { applyUserId } = friend
   const applyQry = await prisma.friend.create({
-    data: { userId1, userId2, isAccepted: false}
+    data: { userId1, userId2: applyUserId, isAccepted: false}
   })
   
   return { status: 201, message: applyQry }
 }
 
-const appliedUserRead = async (userId2: number) => {
-  const foundApplies = await prisma.friend.findMany({ select: { userId1: true,  }, where: { userId2 } })
-  
-  const userIds = foundApplies.map( applier => applier.userId1 )
+const findFriend = async (myId: number) => {
+  const friends = await prisma.friend.findMany({ where: { OR: [
+    { userId1: myId }, { userId2: myId }
+  ], isAccepted: true } })
 
-  const appliers = await prisma.user.findMany({ where: { id: { in: userIds } } })
-  
-  return { status: 200, qry: appliers }
-}
+  return { status: 200, qry: friends }
+};
 
-const acceptApply = async (myId: number, otherId: number) => {
-  const exist = await prisma.friend.findFirst({ where: { userId1: otherId, userId2: myId } })
+const findApplier = async (myId: number) => {
+  const appliers = await prisma.friend.findMany({ where: { 
+    userId2: myId , isAccepted: false } })
 
-  if (!exist) return { status: 404, message: '404 not found' }
-  
-  const acceptQry = await prisma.friend.update({
-    where: { userId1_userId2: { userId1: otherId, userId2: myId } },
-    data: { isAccepted: true },
+  const userIds = appliers.map(applier => applier.userId1)
+
+  const findQry = await prisma.user.findMany({
+    where: { id: { in: userIds } }
   })
   
-  return { status: 200, message: acceptQry}
+  return { status: 200, qry: findQry }
+};
+
+
+const acceptApply = async (myId: number, otherId: number) => {
+  const exist = await prisma.friend.findFirst({
+    where: {
+      userId1: otherId,
+      userId2: myId
+    }
+  })
+
+  if (!exist) {
+    return { status: 404, message: '404 not found' }
+  }
+
+  const acceptQry = await prisma.friend.update({
+    where: {
+      userId1_userId2: {
+        userId1: otherId,
+        userId2: myId
+      }
+    },
+    data: {
+      isAccepted: true
+    }
+  })
+
+  return { status: 200, message: acceptQry }
 }
+
 
 const searchUser = async (friend: SearchFriendDto) => {
   const { friendCode } = friend
-  if (!friendCode) return { status: 204, message: "204 no content"}
 
-  const findQry = await prisma.user.findUnique({ where: { friendCode } })
-  
-  return { status: 200, qry: findQry }
+  const user = await prisma.user.findUnique({ where: { friendCode } })
+  if (!user) return { status: 204, message: "204 no content"}
+
+  return { status: 200, qry: user }
 }
 
 const deleteFriend = async (myId: number, otherId: number) => {
@@ -59,4 +86,4 @@ const deleteFriend = async (myId: number, otherId: number) => {
   return { status: 204, message: deleteQry}
 }
 
-export = { applyFriend, appliedUserRead, acceptApply, searchUser, deleteFriend }
+export = { applyFriend, findFriend, findApplier, acceptApply, searchUser, deleteFriend }

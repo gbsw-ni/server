@@ -9,10 +9,18 @@ const applyFriend = async (req: Request, res: Response) => {
   res.status(201).json(service)
 }
 
-const appliedUserRead = async (req: Request, res: Response) => {
+const findFriend = async (req: Request, res: Response) => {
+  const _user = +req.params.userId
+
+  const service = await friendService.findFriend(_user)
+  
+  res.status(200).json(service)
+}
+
+const findApplier = async (req: Request, res: Response) => {
   const _user2 = +req.params.userId
 
-  const service = friendService.appliedUserRead(_user2)
+  const service = await friendService.findApplier(_user2)
   
   res.status(200).json(service)
 }
@@ -21,13 +29,13 @@ const acceptApply = async (req: Request, res: Response) => {
   const _user1 = +req.params.userId1
   const _user2 = +req.params.userId2
 
-  const service = friendService.acceptApply(_user1, _user2)
+  const service = await friendService.acceptApply(_user1, _user2)
 
   res.status(200).json(service)
 }
 
 const searchUser = async (req: Request, res: Response) => {
-  const service = friendService.searchUser(req.body)
+  const service = await friendService.searchUser(req.body)
 
   res.status(200).json(service)
 }
@@ -41,4 +49,4 @@ const deleteFriend = async (req: Request, res: Response) => {
   res.status(204).json(service)
 }
 
-module.exports = { applyFriend, appliedUserRead, acceptApply, searchUser, deleteFriend }
+module.exports = { applyFriend, findFriend, findApplier, acceptApply, searchUser, deleteFriend }

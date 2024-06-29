@@ -1,6 +1,6 @@
-import express from "express"
+import { Router } from "express"
 
-const router = express.Router()
+const router: Router = Router()
 const diaryController = require('../../api/diary/diaryController')
 
 router.post('/:userId/create', diaryController.createDiary)

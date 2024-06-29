@@ -7,16 +7,16 @@ router.get('/', (_: Request, res: Response, next: NextFunction) => {
   res.send('Wine API')
 })
 
-// const goal = require('./goal/goal')
-// router.use('/goals', goal)
+const privateGoal = require('./goal/privateGoal')
+router.use('/vGoals', privateGoal)
 
 const user = require('./user/user')
-router.use('/user', user)
+router.use('/users', user)
 
 const diary = require('./diary/diary')
-router.use('/diary', diary)
+router.use('/diaries', diary)
 
 const friend = require('./friend/friend')
-router.use('/friend', friend)
+router.use('/friends', friend)
 
 module.exports = router
