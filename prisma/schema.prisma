@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,13 +7,80 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model goal {
-  id          Int         @id @default(autoincrement()) @unique
-  title       String
-  contents    String
-  type        Boolean
-  img         String
+model User {
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  name        String
+  password    String
+  level       Int
   rating      Int
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime
+  ratingLimit Int
+  friendCode  String       @unique
+  friends1    Friend[]     @relation("User1Friends")
+  friends2    Friend[]     @relation("User2Friends")
+  privateGoals PrivateGoal[]
+  privateCompletes PrivateComplete[]
+  diaries     Diary[]
+}
+
+model Diary {
+  id        Int       @id @default(autoincrement())
+  userId    Int       // User 모델의 id를 참조하는 외래키
+  contents  String
+  mission   Int
+  rating    Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime
+
+  // User 모델과의 관계 설정
+  user      User      @relation(fields: [userId], references: [id])
+
+  // User 모델에서 Diary와의 관계 설정 (상대방 관계 필드 추가)
+  @@index([userId], name: "userId")
+
+}
+
+model Friend {
+  id         Int       @id @default(autoincrement())
+  userId1    Int       // User 모델의 id를 참조하는 외래키
+  userId2    Int       // User 모델의 id를 참조하는 외래키
+  isAccepted Boolean
+
+  // User 모델과의 관계 설정 (첫 번째 사용자)
+  user1      User      @relation("User1Friends", fields: [userId1], references: [id])
+
+  // User 모델과의 관계 설정 (두 번째 사용자)
+  user2      User      @relation("User2Friends", fields: [userId2], references: [id])
+
+  // userId1과 userId2의 조합이 고유하도록 설정
+  @@unique([userId1, userId2])
+}
+
+model PrivateGoal {
+  id        Int         @id @default(autoincrement())
+  userId    Int         // User 모델의 id를 참조하는 외래키
+  title     String
+  contents  String
+  type      Boolean
+  img       String
+  rating    Int
+  createdAt DateTime    @default(now())
+  updatedAt DateTime
+  completes PrivateComplete[]
+
+  // User 모델과의 관계 설정
+  user      User        @relation(fields: [userId], references: [id])
+}
+
+model PrivateComplete {
+  id           Int        @id @default(autoincrement())
+  userId       Int        // User 모델의 id를 참조하는 외래키
+  goalId       Int        // PrivateGoal 모델의 id를 참조하는 외래키
+  completedAt  DateTime   @default(now())
+
+  // User 모델과의 관계 설정
+  user         User       @relation(fields: [userId], references: [id])
+
+  // PrivateGoal 모델과의 관계 설정
+  goal         PrivateGoal @relation(fields: [goalId], references: [id])
 }
